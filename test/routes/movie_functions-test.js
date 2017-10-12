@@ -42,7 +42,42 @@ describe('Movie Functions', function (){
                         });
                 });
             });
-
+        });
+        describe('\n      GET   /movies/:id   function:findOne', function(){
+            describe('/movies/59eb66125b06692facbcd438',function(){
+                it('should return an id-specified Movie object', function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd438')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.name).equal("No Country for Old Men");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59e903b',function(){
+                it('should return an error message, when an invalid ID is entered', function(done){
+                    supertest
+                        .get('/movies/59e903b')
+                        .end(function(err,res){
+                            expect(res.status).equal(404);
+                            expect(res.body.message).equal('Invalid ID!');
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59e903b7d6278514683fed11',function(){
+                it('should return an error message, when an valid ID not found in the database is entered', function(done){
+                    supertest
+                        .get('/movies/59e903b7d6278514683fed11')
+                        .end(function(err,res){
+                            expect(res.status).equal(404);
+                            expect(res.body.message).equal('No movie with that ID is in the database.');
+                            done();
+                        });
+                });
+            });
         });
     });
 });
