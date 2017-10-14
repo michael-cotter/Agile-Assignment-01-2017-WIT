@@ -481,6 +481,142 @@ describe('Movie Functions', function (){
                 });
             });
         });
+        describe('\n      GET   /movies/*attribute*/:attribute_value   function:getByAttribute',function(){
+            describe('/movies/name/Blade Runner',function(){
+                it('should return an array of Movie Object(s), the name[s] of which correspond(s) to the :attribute_value',function(done){
+                    supertest
+                        .get('/movies/name/Blade Runner')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (movie) {
+                                return { name: movie.name, year: movie.year, genre: movie.genre, type: movie.type, rating: movie.rating, content_rating: movie.content_rating, cast_and_crew: movie.cast_and_crew }
+                            });
+                            expect(result).to.include({name:"Blade Runner",year:1982,genre:"Sci-fi Detective",type:"feature",rating:5,content_rating:"R",cast_and_crew:["Harrison Ford","Rutger Hauer","Ridley Scott","Vangelis","Hampton Fancher","Jordan Cronenweth"]})
+                            done();
+                        });
+                });
+            });
+            describe('/movies/genre/Sci-fi Detective',function(){
+                it('should return an array of Movie Object(s), the genre[s] of which correspond(s) to the :attribute_value',function(done){
+                    supertest
+                        .get('/movies/genre/Sci-fi Detective')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (movie) {
+                                return { name: movie.name, year: movie.year, genre: movie.genre, type: movie.type, rating: movie.rating, content_rating: movie.content_rating, cast_and_crew: movie.cast_and_crew }
+                            });
+                            expect(result).to.include({name:"Blade Runner",year:1982,genre:"Sci-fi Detective",type:"feature",rating:5,content_rating:"R",cast_and_crew:["Harrison Ford","Rutger Hauer","Ridley Scott","Vangelis","Hampton Fancher","Jordan Cronenweth"]})
+                            done();
+                        });
+                });
+            });
+            describe('/movies/year/1982',function(){
+                it('should return an array of Movie Object(s), the years[s] of which correspond(s) to the :attribute_value',function(done){
+                    supertest
+                        .get('/movies/year/1982')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (movie) {
+                                return { name: movie.name, year: movie.year, genre: movie.genre, type: movie.type, rating: movie.rating, content_rating: movie.content_rating, cast_and_crew: movie.cast_and_crew }
+                            });
+                            expect(result).to.include({name:"Blade Runner",year:1982,genre:"Sci-fi Detective",type:"feature",rating:5,content_rating:"R",cast_and_crew:["Harrison Ford","Rutger Hauer","Ridley Scott","Vangelis","Hampton Fancher","Jordan Cronenweth"]})
+                            done();
+                        });
+                });
+            });
+            describe('/movies/type/feature',function(){
+                it('should return an array of Movie Object(s), the type(s) of which correspond[s] to the :attribute_value',function(done){
+                    supertest
+                        .get('/movies/type/feature')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            var result = _.map(res.body, function (movie) {
+                                return { name: movie.name, year: movie.year, genre: movie.genre, type: movie.type, rating: movie.rating, content_rating: movie.content_rating, cast_and_crew: movie.cast_and_crew }
+                            });
+                            expect(result).to.include({name:"Blade Runner",year:1982,genre:"Sci-fi Detective",type:"feature",rating:5,content_rating:"R",cast_and_crew:["Harrison Ford","Rutger Hauer","Ridley Scott","Vangelis","Hampton Fancher","Jordan Cronenweth"]})
+                            expect(result).to.include( {name:"No Country for Old Men",year:2007,genre:"Western Drama",type:"feature",rating:9,content_rating:"R",cast_and_crew:["Josh Brolin","Tommy Lee Jones","Javier Bardem","Kelly MacDonald","Woody Harrelson","Joel Coen","Ethan Coen","Roger Deakins"]} );
+                            done();
+                        });
+                });
+            });
+            describe('/movies/rating/9',function(){
+                it('should return an array of Movie Object(s), the rating(s) of which correspond[s] to the :attribute_value',function(done){
+                    supertest
+                        .get('/movies/rating/9')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (movie) {
+                                return { name: movie.name, year: movie.year, genre: movie.genre, type: movie.type, rating: movie.rating, content_rating: movie.content_rating, cast_and_crew: movie.cast_and_crew }
+                            });
+                            expect(result).to.include( {name:"No Country for Old Men",year:2007,genre:"Western Drama",type:"feature",rating:9,content_rating:"R",cast_and_crew:["Josh Brolin","Tommy Lee Jones","Javier Bardem","Kelly MacDonald","Woody Harrelson","Joel Coen","Ethan Coen","Roger Deakins"]} );
+                            done();
+                        });
+                });
+            });
+            describe('/movies/content_rating/R',function(){
+                it('should return an array of Movie Object(s), the type(s) of which correspond[s] to the :attribute_value',function(done){
+                    supertest
+                        .get('/movies/content_rating/R')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            var result = _.map(res.body, function (movie) {
+                                return { name: movie.name, year: movie.year, genre: movie.genre, type: movie.type, rating: movie.rating, content_rating: movie.content_rating, cast_and_crew: movie.cast_and_crew }
+                            });
+                            expect(result).to.include({name:"Blade Runner",year:1982,genre:"Sci-fi Detective",type:"feature",rating:5,content_rating:"R",cast_and_crew:["Harrison Ford","Rutger Hauer","Ridley Scott","Vangelis","Hampton Fancher","Jordan Cronenweth"]})
+                            expect(result).to.include( {name:"No Country for Old Men",year:2007,genre:"Western Drama",type:"feature",rating:9,content_rating:"R",cast_and_crew:["Josh Brolin","Tommy Lee Jones","Javier Bardem","Kelly MacDonald","Woody Harrelson","Joel Coen","Ethan Coen","Roger Deakins"]} );
+                            done();
+                        });
+                });
+            });
+            describe('/movies/content_rating/M',function(){
+                it('should return an error message when an invalid search attribute_value was entered',function(done){
+                    supertest
+                        .get('/movies/content_rating/M')
+                        .end(function(err,res){
+                            expect(res.status).equal(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.message).equal("There are no Movies with that attribute in the database.");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/content_rating/Blade Runner?ids=1,2,3,4',function(){
+                it('should return an error message when request parameters are added to the path',function(done){
+                    supertest
+                        .get('/movies/content_rating/Blade Runner?ids=1,2,3,4')
+                        .end(function(err,res){
+                            expect(res.status).equal(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.message).equal("Request parameters were included, invalidating the search");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/content_rating/Fake Name',function(){
+                it('should return an error message when the attribute value being searched for is not in the database.',function(done){
+                    supertest
+                        .get('/movies/content_rating/Fake Name')
+                        .end(function(err,res){
+                            expect(res.status).equal(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.message).equal("There are no Movies with that attribute in the database.");
+                            done();
+                        });
+                });
+            });
+        });
         
     });
 });
