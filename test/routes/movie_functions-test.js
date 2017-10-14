@@ -370,7 +370,117 @@ describe('Movie Functions', function (){
                 });
             });
         });
-
+        describe('\n      GET   /movies/*attribute*/list/all   function:getAttributeList', function(){
+            describe('/movies/name/list/all',function(){
+                it('should return an array containing the name attributes of the objects in the database',function(done){
+                    supertest
+                        .get('/movies/name/list/all')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            expect(res.body).to.include("Blade Runner");
+                            expect(res.body).to.include("No Country for Old Men");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/genre/list/all',function(){
+                it('should return an array containing the genre attributes of the objects in the database',function(done){
+                    supertest
+                        .get('/movies/genre/list/all')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            expect(res.body).to.include("Sci-fi Detective");
+                            expect(res.body).to.include("Western Drama");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/year/list/all',function(){
+                it('should return an array containing the year attributes of the objects in the database',function(done){
+                    supertest
+                        .get('/movies/year/list/all')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            expect(res.body).to.include(1982);
+                            expect(res.body).to.include(2007);
+                            done();
+                        });
+                });
+            });
+            describe('/movies/cast_and_crew/list/all',function(){
+                it('should return an array containing the cast_and_crew attributes of the objects in the database',function(done){
+                    supertest
+                        .get('/movies/cast_and_crew/list/all')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            var result = _.map(res.body, function (movie) {
+                                return { cast_and_crew: movie.cast_and_crew }
+                            });
+                            var comparison = ["Harrison Ford","Rutger Hauer","Ridley Scott","Vangelis","Hampton Fancher","Jordan Cronenweth"];
+                            expect(res.body[0].length).equal(comparison.length);
+                            for(var i = 0; i < res.body[0].length; i++){
+                                expect(comparison[i] === res.body[0][i]);
+                            }
+                            comparison = ["Josh Brolin","Tommy Lee Jones","Javier Bardem","Kelly MacDonald","Woody Harrelson","Joel Coen","Ethan Coen","Roger Deakins"]
+                            expect(res.body[1].length).equal(comparison.length);
+                            for(var i = 0; i < res.body[1].length; i++){
+                                expect(comparison[i] === res.body[1][i]);
+                            }
+                            done();
+                        });
+                });
+            });
+            describe('/movies/type/list/all',function(){
+                it('should return an array containing the type attributes of the objects in the database',function(done){
+                    supertest
+                        .get('/movies/type/list/all')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            expect(res.body).to.include("feature");
+                            expect(res.body).to.include("feature");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/rating/list/all',function(){
+                it('should return an array containing the rating attributes of the objects in the database',function(done){
+                    supertest
+                        .get('/movies/rating/list/all')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            expect(res.body).to.include(5);
+                            expect(res.body).to.include(9);
+                            done();
+                        });
+                });
+            });
+            describe('/movies/content_rating/list/all',function(){
+                it('should return an array containing the content_rating attributes of the objects in the database',function(done){
+                    supertest
+                        .get('/movies/content_rating/list/all')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            expect(res.body).to.include("R");
+                            expect(res.body).to.include("R");
+                            done();
+                        });
+                });
+            });
+        });
         
     });
 });
