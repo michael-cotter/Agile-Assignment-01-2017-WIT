@@ -776,4 +776,67 @@ describe('Movie Functions', function (){
             });
         });
     });
+    describe('\n\n    POST Functions', function(){
+        describe('POST   /movies   function:addOne', function(){
+            describe('/movies   [requires the inclusion of a valid document to the request body]',function(){
+                it('should add valid document into database and return confirmation message', function(done){
+                    var new_Movie = {name:"There Will be Blood",_id:"59eb66125b06692facbcd439",year:2007,genre:"Western Drama",type:"feature",rating:8,content_rating:"R",cast_and_crew:["Daniel Day-Lewis","Paul Dano","Dillon Freasier","Paul Thomas Anderson","Robert Elswit","Dylan Tichenor","Johnny Greenwood"]}
+                    supertest
+                        .post('/movies')
+                        .send(new_Movie)
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message').equal('Movie Added to Database!');
+                            done();
+                        });
+                });
+                after(function (done) {
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd439')
+                        .end(function(err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.name).equal("There Will be Blood");
+                            expect(res.body.year).equal(2007);
+                            expect(res.body.genre).equal("Western Drama");
+                            expect(res.body.type).equal("feature");
+                            expect(res.body.rating).equal(8);
+                            expect(res.body.content_rating).equal("R");
+                            var comparison = ["Daniel Day-Lewis","Paul Dano","Dillon Freasier","Paul Thomas Anderson","Robert Elswit","Dylan Tichenor","Johnny Greenwood"];
+                            for(var i = 0; i < res.body.cast_and_crew; i++){
+                                expect(comparison[i] === res.body.cast_and_crew[i]);
+                            }
+                            done();
+                        });
+                });
+            });
+            describe('/movies?ids=1,2,3,4',function(){
+                it('should return an error message when request parameters are attached to the path', function(done){
+                    var new_Movie = {name:"There Will be Blood",_id:"59eb66125b06692facbcd439",year:2007,genre:"Western Drama",type:"feature",rating:8,content_rating:"R",cast_and_crew:["Daniel Day-Lewis","Paul Dano","Dillon Freasier","Paul Thomas Anderson","Robert Elswit","Dylan Tichenor","Johnny Greenwood"]}
+                    supertest
+                        .post('/movies?ids=1,2,3,4')
+                        .send(new_Movie)
+                        .end(function(err,res){
+                            expect(res.status).equal(404);
+                            expect(res.body).to.have.property('message').equal('There\'s a problem with the request path');
+                            done();
+                        });
+                });
+            });
+            describe('/movies   [requires the inclusion of an invalid document to the request body]',function(){
+                it('should return an error when an invalid document is sent',function(done){
+                    var new_Movie = {x:"There Will be Blood",year:2007,genre:"Western Drama",type:"feature",rating:8,content_rating:"R",cast_and_crew:["Daniel Day-Lewis","Paul Dano","Dillon Freasier","Paul Thomas Anderson","Robert Elswit","Dylan Tichenor","Johnny Greenwood"]}
+                    supertest
+                        .post('/movies')
+                        .send(new_Movie)
+                        .end(function(err,res){
+                            expect(res.status).equal(404);
+                            expect(res.body).to.have.property('errors');
+                            done();
+                        });
+                });
+            });
+        });
+    });
+
 });
