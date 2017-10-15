@@ -658,5 +658,122 @@ describe('Movie Functions', function (){
                 })
             });
         });
+        describe('\n      GET   /movies/:id/*attribute*   function:getSpecificAttribute',function(){
+            describe('/movies/59eb66125b06692facbcd438/name',function(){
+                it('should return an id-specified name attribute string',function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd438/name')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('String');
+                            expect(res.body).equal("No Country for Old Men");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd438/genre',function(){
+                it('should return an id-specified genre attribute string',function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd438/genre')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('String');
+                            expect(res.body).equal("Western Drama");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd438/year',function(){
+                it('should return an id-specified year attribute number',function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd438/year')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('Number');
+                            expect(res.body).equal(2007);
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd438/cast_and_crew',function(){
+                it('should return an id-specified cast_and_crew attribute number',function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd438/cast_and_crew')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            var result = _.map(res.body, function (movie) {
+                                return { cast_and_crew: movie.cast_and_crew }
+                            });
+                            var comparison = ["Josh Brolin","Tommy Lee Jones","Javier Bardem","Kelly MacDonald","Woody Harrelson","Joel Coen","Ethan Coen","Roger Deakins"];
+                            expect(res.body.length).equal(comparison.length);
+                            for(var i = 0; i < res.body[0].length; i++){
+                                expect(comparison[i] === res.body[0][i]);
+                            }
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd438/type',function(){
+                it('should return an id-specified type attribute string',function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd438/type')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('String');
+                            expect(res.body).equal("feature");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd438/rating',function(){
+                it('should return an id-specified rating attribute number',function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd438/rating')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('Number');
+                            expect(res.body).equal(9);
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd438/content_rating',function(){
+                it('should return an id-specified content_rating attribute string',function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd438/content_rating')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('String');
+                            expect(res.body).equal("R");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59e903b7d6278514683fed/content_rating',function(){
+                it('should return an error message when invalid ID is entered',function(done){
+                    supertest
+                        .get('/movies/59e903b7d6278514683fed/content_rating')
+                        .end(function(err,res){
+                            expect(res.status).equal(404);
+                            expect(res.body).to.have.property('message')
+                            expect(res.body.message).equal('Invalid ID');
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59e903b7d6278514683fedc0/name',function(){
+                it('should return an error message indicating that the ID sent is not present in the database',function(done){
+                    supertest
+                        .get('/movies/59e903b7d6278514683fedc0/name')
+                        .end(function(err,res){
+                            expect(res.status).equal(404);
+                            expect(res.body).to.have.property('message')
+                            expect(res.body.message).equal('This ID is not present in the database.');
+                            done();
+                        });
+                });
+            });
+        });
     });
 });
