@@ -617,6 +617,46 @@ describe('Movie Functions', function (){
                 });
             });
         });
-        
+        describe('\n      GET   /movies/cast_and_crew/:search_input   function:getByCastAndCrew',function(){
+            describe('/movies/cast_and_crew/Harrison Ford',function(){
+                it('should return an array of Movie Objects in which the cast/crew member is featured',function(done){
+                    supertest
+                        .get('/movies/cast_and_crew/Harrison Ford')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            var result = _.map(res.body, function (movie) {
+                                return { name: movie.name, year: movie.year, genre: movie.genre, type: movie.type, rating: movie.rating, content_rating: movie.content_rating, cast_and_crew: movie.cast_and_crew }
+                            });
+                            expect(result).to.include({name:"Blade Runner",year:1982,genre:"Sci-fi Detective",type:"feature",rating:5,content_rating:"R",cast_and_crew:["Harrison Ford","Rutger Hauer","Ridley Scott","Vangelis","Hampton Fancher","Jordan Cronenweth"]})
+                            done();
+                        });
+                });
+            });
+            describe('/movies/cast_and_crew/John Smith',function(){
+                it('should return an error message when a cast/crew member not featured in any Movie Objects is sent',function(done){
+                    supertest
+                        .get('/movies/cast_and_crew/John Smith')
+                        .end(function(err,res){
+                            expect(res.status).equal(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.message).equal("There are no Movie Object\'s featuring this cast/crew member.");
+                            done();
+                        });
+                });
+            });
+            describe('movies/cast_and_crew/Harrison Ford?ids=1,2,3,4',function(){
+                it('should return an error message, indicating that request parameters were erroneously included',function(done){
+                    supertest
+                        .get('/movies/cast_and_crew/Harrison Ford?ids=1,2,3,4')
+                        .end(function(err,res){
+                            expect(res.status).equal(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.message).equal("Request parameters were included, invalidating the search");
+                            done();
+                        });
+                })
+            });
+        });
     });
 });
