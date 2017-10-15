@@ -837,6 +837,88 @@ describe('Movie Functions', function (){
                 });
             });
         });
-    });
+        describe('\n      POST   /movies/:array_name   function:addMany',function(){
+            describe('/movies/movies_array   [requires the inclusion of an array named Movie_array in the request body]',function(){
+                it('should add the contents of the :array_name array to the database, when it contains valid documents, and return a confirmation message',function(done){
+                    var send_object = {
+                        movie_array:
+                            [
+                                {name:"The Master",year:2012,genre:"Drama",type:"feature",rating:8,content_rating:"R",cast_and_crew:["Joaquin Phoenix","Philip Seymour Hoffman","Amy Adams","Paul Thomas Anderson","Dylan Tichenor","Johnny Greenwood","Mihai Malaimare Jr."]},
+                                {name:"Blade Runner 2049",year:2017,genre:"Sci-fi Detective",type:"feature",rating:9,content_rating:"R",cast_and_crew:["Ryan Gosling","Harrison Ford","Denis Villeneuve","Hampton Fancher","Roger Deakins","Sylvia Hoeks","Robin Wright","Ana de Armas","Jared Leto"]},
+                                {name:"There Will be Blood",year:2007,genre:"Western Drama",type:"feature",rating:8,content_rating:"R",cast_and_crew:["Daniel Day-Lewis","Paul Dano","Dillon Freasier","Paul Thomas Anderson","Robert Elswit","Dylan Tichenor","Johnny Greenwood"]}
+                            ]
+                    }
+                    supertest
+                        .post('/movies/movie_array')
+                        .send(send_object)
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("Movie(s) added to the database.");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies')
+                        .end(function(err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(5);
+                            var result = _.map(res.body, function (movie) {
+                                return { name: movie.name, genre: movie.genre, year: movie.year, type: movie.type, rating: movie.rating, content_rating:movie.content_rating,cast_and_crew: movie.cast_and_crew, }
+                            });
+                            expect(result).to.include({name:"The Master",year:2012,genre:"Drama",type:"feature",rating:8,content_rating:"R",cast_and_crew:["Joaquin Phoenix","Philip Seymour Hoffman","Amy Adams","Paul Thomas Anderson","Dylan Tichenor","Johnny Greenwood","Mihai Malaimare Jr."]});
+                            expect(result).to.include({name:"Blade Runner 2049",year:2017,genre:"Sci-fi Detective",type:"feature",rating:9,content_rating:"R",cast_and_crew:["Ryan Gosling","Harrison Ford","Denis Villeneuve","Hampton Fancher","Roger Deakins","Sylvia Hoeks","Robin Wright","Ana de Armas","Jared Leto"]});
+                            expect(result).to.include({name:"There Will be Blood",year:2007,genre:"Western Drama",type:"feature",rating:8,content_rating:"R",cast_and_crew:["Daniel Day-Lewis","Paul Dano","Dillon Freasier","Paul Thomas Anderson","Robert Elswit","Dylan Tichenor","Johnny Greenwood"]});
+                            done();
+                        });
+                });
+            });
+            describe('/movies/movie_array   [requires the inclusion of an array named Movie_array in the request body]',function(){
+                it('should return an error when at least one of the documents in the :array_name array are invalid',function(done){
+                    var send_object = {
+                        movie_array:
+                            [
+                                {x:"The Master",year:2012,genre:"Drama",type:"feature",rating:8,content_rating:"R",cast_and_crew:["Joaquin Phoenix","Philip Seymour Hoffman","Amy Adams","Paul Thomas Anderson","Dylan Tichenor","Johnny Greenwood","Mihai Malaimare Jr."]},
+                                {name:"Blade Runner 2049",year:2017,genre:"Sci-fi Detective",type:"feature",rating:9,content_rating:"R",cast_and_crew:["Ryan Gosling","Harrison Ford","Denis Villeneuve","Hampton Fancher","Roger Deakins","Sylvia Hoeks","Robin Wright","Ana de Armas","Jared Leto"]},
+                                {name:"There Will be Blood",year:2007,genre:"Western Drama",type:"feature",rating:8,content_rating:"R",cast_and_crew:["Daniel Day-Lewis","Paul Dano","Dillon Freasier","Paul Thomas Anderson","Robert Elswit","Dylan Tichenor","Johnny Greenwood"]}
+                            ]
+                    }
+                    supertest
+                        .post('/movies/movie_array')
+                        .send(send_object)
+                        .end(function(err,res){
+                            expect(res.status).equal(404);
+                            expect(res.body).to.have.property('errors').to.have.property('name').to.have.property('message');
+                            expect(res.body.errors.name.message).equal("Path `name` is required.");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/wrong_name',function(){
+                it('should return an error when :array_name is not the name of the array that is sent',function(done){
+                    var send_object = {
+                        movie_array:
+                            [
+                                {x:"The Master",year:2012,genre:"Drama",type:"feature",rating:8,content_rating:"R",cast_and_crew:["Joaquin Phoenix","Philip Seymour Hoffman","Amy Adams","Paul Thomas Anderson","Dylan Tichenor","Johnny Greenwood","Mihai Malaimare Jr."]},
+                                {name:"Blade Runner 2049",year:2017,genre:"Sci-fi Detective",type:"feature",rating:9,content_rating:"R",cast_and_crew:["Ryan Gosling","Harrison Ford","Denis Villeneuve","Hampton Fancher","Roger Deakins","Sylvia Hoeks","Robin Wright","Ana de Armas","Jared Leto"]},
+                                {name:"There Will be Blood",year:2007,genre:"Western Drama",type:"feature",rating:8,content_rating:"R",cast_and_crew:["Daniel Day-Lewis","Paul Dano","Dillon Freasier","Paul Thomas Anderson","Robert Elswit","Dylan Tichenor","Johnny Greenwood"]}
+                            ]
+                    }
+                    supertest
+                        .post('/movies/wrong_name')
+                        .send(send_object)
+                        .end(function(err,res){
+                            expect(res.status).equal(404);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("The name of the array in the request path does not match the name of the array that was sent.");
+                            done();
+                        });
+                });
+            });
+        });
 
+
+    });
 });
