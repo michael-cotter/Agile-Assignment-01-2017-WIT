@@ -944,6 +944,159 @@ describe('Movie Functions', function (){
                 });
             });
         });
-        
+        describe('\n      DELETE    /movies/*attribute*/:attribute_value   function:deleteMany',function(){
+            describe('/movies/name/No Country for Old Men',function(){
+                it('should return a message confirming there are no Movie objects in the database with the specified name value', function(done) {
+                    supertest
+                        .delete('/movies/name/No Country for Old Men')
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal('There are now no Movie Objects in the database that have No Country for Old Men for its name.');
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (movie) {
+                                return { name: movie.name, year: movie.year, genre: movie.genre, type: movie.type, rating: movie.rating, content_rating: movie.content_rating, cast_and_crew: movie.cast_and_crew }
+                            });
+                            expect(result).to.include( {name:"Blade Runner",year:1982,genre:"Sci-fi Detective",type:"feature",rating:5,content_rating:"R",cast_and_crew:["Harrison Ford","Rutger Hauer","Ridley Scott","Vangelis","Hampton Fancher","Jordan Cronenweth"]} );
+                            done();
+                        });
+                });
+            });
+            describe('/movies/genre/Western Drama',function(){
+                it('should return a message confirming there are no Movie objects in the database with the specified genre value', function(done){
+                    supertest
+                        .delete('/movies/genre/Western Drama')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal('There are now no Movie Objects in the database that have Western Drama for its genre.');
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (movie) {
+                                return { name: movie.name, year: movie.year, genre: movie.genre, type: movie.type, rating: movie.rating, content_rating: movie.content_rating, cast_and_crew: movie.cast_and_crew }
+                            });
+                            expect(result).to.include( {name:"Blade Runner",year:1982,genre:"Sci-fi Detective",type:"feature",rating:5,content_rating:"R",cast_and_crew:["Harrison Ford","Rutger Hauer","Ridley Scott","Vangelis","Hampton Fancher","Jordan Cronenweth"]} );
+                            done();
+                        });
+                });
+            });
+            describe('/movies/year/2007',function(){
+                it('should return a message confirming there are no Movie objects in the database with the specified year value', function(done){
+                    supertest
+                        .delete('/movies/year/2007')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal('There are now no Movie Objects in the database that have 2007 for its year.');
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (movie) {
+                                return { name: movie.name, year: movie.year, genre: movie.genre, type: movie.type, rating: movie.rating, content_rating: movie.content_rating, cast_and_crew: movie.cast_and_crew }
+                            });
+                            expect(result).to.include( {name:"Blade Runner",year:1982,genre:"Sci-fi Detective",type:"feature",rating:5,content_rating:"R",cast_and_crew:["Harrison Ford","Rutger Hauer","Ridley Scott","Vangelis","Hampton Fancher","Jordan Cronenweth"]} );
+                            done();
+                        });
+
+                });
+            });
+            describe('/movies/type/feature',function(){
+                it('should return a message confirming there are no Movie objects in the database with the specified type value', function(done){
+                    supertest
+                        .delete('/movies/type/feature')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal('There are now no Movie Objects in the database that have feature for its type.');
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(0);
+                            done();
+                        });
+
+                });
+            });
+            describe('/movies/rating/9',function(){
+                it('should return a message confirming there are no Movie objects in the database with the specified rating value', function(done){
+                    supertest
+                        .delete('/movies/rating/9')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal('There are now no Movie Objects in the database that have 9 for its rating.');
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (movie) {
+                                return { name: movie.name, year: movie.year, genre: movie.genre, type: movie.type, rating: movie.rating, content_rating: movie.content_rating, cast_and_crew: movie.cast_and_crew }
+                            });
+                            expect(result).to.include( {name:"Blade Runner",year:1982,genre:"Sci-fi Detective",type:"feature",rating:5,content_rating:"R",cast_and_crew:["Harrison Ford","Rutger Hauer","Ridley Scott","Vangelis","Hampton Fancher","Jordan Cronenweth"]} );
+                            done();
+                        });
+                });
+            });
+            describe('/movies/content_rating/R',function(){
+                it('should return a message confirming there are no Movie objects in the database with the specified content_rating value', function(done){
+                    supertest
+                        .delete('/movies/content_rating/R')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal('There are now no Movie Objects in the database that have R for its content_rating.');
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(0);
+                            done();
+                        });
+                });
+            });
+        });
+
+
     });
 });
