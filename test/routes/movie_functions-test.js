@@ -1096,7 +1096,57 @@ describe('Movie Functions', function (){
                 });
             });
         });
-
-
+        describe('\n      DELETE    /movies/:id   function:deleteOne', function(){
+            describe('/movies/59eb66125b06692facbcd437',function(){
+                it('should delete an id-specified Movie Object from the database, and return a confirmation message', function(done){
+                    supertest
+                        .delete('/movies/59eb66125b06692facbcd437')
+                        .end(function(err, res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message').equal('Movie Deleted from Database!')
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (movie) {
+                                return { name: movie.name, year: movie.year, genre: movie.genre, type: movie.type, rating: movie.rating, content_rating: movie.content_rating, cast_and_crew: movie.cast_and_crew }
+                            });
+                            expect(result).to.include( {name:"No Country for Old Men",year:2007,genre:"Western Drama",type:"feature",rating:9,content_rating:"R",cast_and_crew:["Josh Brolin","Tommy Lee Jones","Javier Bardem","Kelly MacDonald","Woody Harrelson","Joel Coen","Ethan Coen","Roger Deakins"]} );
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59e903b7d6e',function(){
+                it('should return an error message when an invalid ID is sent', function(done){
+                    supertest
+                        .delete('/movies/59e903b7d6e')
+                        .end(function(err, res){
+                            expect(res.status).equal(404);
+                            expect(res.body).to.have.property('message').equal('Invalid ID!');
+                            expect(res.body).to.have.property('errmsg');
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59e903b7d6278514683faaaa',function(){
+                it('should return an error message when a valid ID is sent that is not present in the database', function(done){
+                    supertest
+                        .delete('/movies/59e903b7d6278514683faaaa')
+                        .end(function(err, res){
+                            expect(res.status).equal(404);
+                            expect(res.body).to.have.property('message').equal("That ID is not present in the database.");
+                            done();
+                        });
+                });
+            });
+        });
     });
+
+    
 });
