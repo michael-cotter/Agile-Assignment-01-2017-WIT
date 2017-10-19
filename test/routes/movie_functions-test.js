@@ -918,7 +918,32 @@ describe('Movie Functions', function (){
                 });
             });
         });
-
-
+    });
+    describe('\n\n    DELETE Functions', function(){
+        describe('DELETE   /movies   function:deleteMany',function(){
+            describe('/movies',function(){
+                it('should delete all Movie objects from the database, and return a confirmation message', function(done){
+                    supertest
+                        .delete('/movies')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("All Movie objects have been deleted from the database");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(0);
+                            done();
+                        });
+                });
+            });
+        });
+        
     });
 });
