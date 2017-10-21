@@ -1147,7 +1147,7 @@ describe('Movie Functions', function (){
             });
         });
     });
-     describe('\n\n    PUT Functions', function(){
+    describe('\n\n    PUT Functions', function(){
         describe('PUT   /movies/:id/*attribute*/:new_value   function:changeAttributeValue', function(){
             describe('/movies/59eb66125b06692facbcd437/name/Do Androids Dream of Electric Sheep', function(){
                 it('should return a confirmation message, and update the name attribute in the database',function(done) {
@@ -1331,7 +1331,7 @@ describe('Movie Functions', function (){
                 });
             });
         });
-describe('\n      PUT   /movies/:id/*instruction*   function:incOrDecRating',function(){
+        describe('\n      PUT   /movies/:id/*instruction*   function:incOrDecRating',function(){
             describe('/movies/59eb66125b06692facbcd437/incrementRating   [when rating is not equal to 10]', function(){
                 it('should return a confirmation message, and increment the rating attribute value in the database.', function(done){
                     supertest
@@ -1453,8 +1453,112 @@ describe('\n      PUT   /movies/:id/*instruction*   function:incOrDecRating',fun
                 });
             });
         });
-
-
-    
+        describe('\n      PUT   /movies/:id/*add_or_del_cast_member*/:add_member   function:addOrRemoveCastOrCrewMember',function(){
+            describe('/movies/59eb66125b06692facbcd437/add_cast_and_crew/Sean Young',function(){
+                it('should add the new member to the Movie Object\'s cast_and_crew array',function(done){
+                    supertest
+                        .put('/movies/59eb66125b06692facbcd437/add_cast_and_crew/Sean Young')
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("Cast/Crew member added!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd437/cast_and_crew')
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(7);
+                            expect(res.body[6]).equal('Sean Young')
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/add_cast_and_crew/Harrison Ford',function(){
+                it('should return a message indicating that the new member is already present in the the cast_and_crew array',function(done){
+                    supertest
+                        .put('/movies/59eb66125b06692facbcd437/add_cast_and_crew/Harrison Ford')
+                        .end(function (err, res) {
+                            expect(res.status).equal(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("Cast/Crew member already present.");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/del_cast_and_crew/Harrison Ford', function(){
+                it('should remove the cast member from the Movie Object\'s cast_and_crew array',function(done){
+                    supertest
+                        .put('/movies/59eb66125b06692facbcd437/del_cast_and_crew/Harrison Ford')
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("Cast/Crew Updated.");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd437/cast_and_crew')
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(5);
+                            var comparison = ["Rutger Hauer","Ridley Scott","Vangelis","Hampton Fancher","Jordan Cronenweth"];
+                            for(var i = 0; i < res.body.length; i++){
+                                expect(res.body[i]).equal(comparison[i]);
+                            }
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/del_cast_and_crew/John Smith', function(){
+                it('should indicate that the cast member to be deleted is not present in the cast_and_crew array',function(done){
+                    supertest
+                        .put('/movies/59eb66125b06692facbcd437/del_cast_and_crew/John Smith')
+                        .end(function (err, res) {
+                            expect(res.status).equal(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal('Cast/Crew could not be found; was not removed.');
+                            done();
+                        });
+                }) ;
+            });
+            describe('/movies/59eb66125b06692f7acbcd43/add_cast_and_crew/Sean Young', function(){
+                it('should return an error message indicating that the ID that was sent is not in the database',function(done){
+                    supertest
+                        .put('/movies/59eb66125b06692f7acbcd43/add_cast_and_crew/Sean Young')
+                        .end(function (err, res) {
+                            expect(res.status).equal(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("That ID is not present in the database.");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692fac/add_cast_and_crew/Sean Young', function(){
+                 it('should return an error message indicating that the ID that was sent is invalid',function(done){
+                     supertest
+                         .put('/movies/59eb66125b06692fac/add_cast_and_crew/Sean Young')
+                         .end(function (err, res) {
+                             expect(res.body).to.be.a('object');
+                             expect(res.body).to.have.property('message');
+                             expect(res.body.message).equal("Cast to ObjectId failed for value \"59eb66125b06692fac\" at path \"_id\" for model \"MovieCollection\"");
+                             done();
+                         });
+                 });
+            });
+        });    
     });
+    
+    
+
 });
