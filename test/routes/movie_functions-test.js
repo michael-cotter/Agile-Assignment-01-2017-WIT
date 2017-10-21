@@ -1558,7 +1558,213 @@ describe('Movie Functions', function (){
             });
         });    
     });
-    
+    describe('\n\n    PATCH Functions', function(){
+        describe('PATCH   /movies/:id/*attribute*/:new_value   function:changeAttributeValue_patch', function(){
+            describe('/movies/59eb66125b06692facbcd437/name/Minority Report', function(){
+                it('should return a confirmation message, and update the name attribute in the database',function(done) {
+                    supertest
+                        .patch('/movies/59eb66125b06692facbcd437/name/Minority Report')
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message').equal("The Movie Object was successfully patched!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd437')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.name).equal('Minority Report');
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/genre/Rain-streaked Streets', function(){
+                it('should return a confirmation message, and update the genre attribute in the database',function(done) {
+                    supertest
+                        .patch('/movies/59eb66125b06692facbcd437/genre/Rain-streaked Streets')
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message').equal("The Movie Object was successfully patched!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd437')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.genre).equal('Rain-streaked Streets');
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/year/2008', function(){
+                it('should return a confirmation message, and update the year attribute in the database',function(done) {
+                    supertest
+                        .patch('/movies/59eb66125b06692facbcd437/year/2008')
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message').equal("The Movie Object was successfully patched!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd437')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.year).equal(2008);
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/rating/3', function(){
+                it('should return a confirmation message, and update the rating attribute in the database',function(done) {
+                    supertest
+                        .patch('/movies/59eb66125b06692facbcd437/rating/3')
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message').equal("The Movie Object was successfully patched!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd437')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.rating).equal(3);
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/replace_cast_and_crew/secret_weapon', function(){
+                it('should return a confirmation message, and update the cast_and_crew attribute in the database',function(done) {
+                    var new_cast_and_crew = {secret_weapon:["Sean Young"]}
+                    supertest
+                        .patch('/movies/59eb66125b06692facbcd437/replace_cast_and_crew/secret_weapon')
+                        .send(new_cast_and_crew)
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message').equal("The Movie Object was successfully patched!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd437')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.cast_and_crew).to.be.a('array');
+                            expect(res.body.cast_and_crew.length).equal(1);
+                            expect(res.body.cast_and_crew[0]).equal("Sean Young");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/replace_cast_and_crew/secret_weapon   [a new array is not sent]', function(){
+                it('should return a confirmation message, and update the cast_and_crew attribute in the database',function(done) {
+                    supertest
+                        .patch('/movies/59eb66125b06692facbcd437/replace_cast_and_crew/secret_weapon')
+                        .end(function (err, res) {
+                            expect(res.status).equal(404);
+                            expect(res.body).to.have.property('message').equal("Either a new Cast and Crew array was not provided, or its name does not match the one in the request path!");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/replace_cast_and_crew/wrong_name   [array name doesn\'t match array name in search path]', function(){
+                it('should return an error message, indicating that the name of the sent array is not the same as the name in the request path',function(done) {
+                    var new_cast_and_crew = {secret_weapon:["Sean Young"]}
+                    supertest
+                        .patch('/movies/59eb66125b06692facbcd437/replace_cast_and_crew/wrong_name')
+                        .send(new_cast_and_crew)
+                        .end(function (err, res) {
+                            expect(res.status).equal(404);
+                            expect(res.body).to.have.property('message').equal("Either a new Cast and Crew array was not provided, or its name does not match the one in the request path!");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/content_rating/NC-17', function(){
+                it('should return a confirmation message, and update the content_rating attribute in the database',function(done) {
+                    supertest
+                        .patch('/movies/59eb66125b06692facbcd437/content_rating/NC-17')
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message').equal("The Movie Object was successfully patched!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd437')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.content_rating).equal('NC-17');
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59e903b7d627851468fedce3/name/whatever', function(){
+                it('should return an error message, indicating that the id specified is not present in the database',function(done) {
+                    supertest
+                        .patch('/movies/59e903b7d627851468fedce3/name/whatever')
+                        .end(function (err, res) {
+                            expect(res.body).to.have.property('message').equal("A Movie Object with that ID could not be found.");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59e903b7d627851/name/something', function(){
+                it('should return an error message, indicating that the id sent is invalid',function(done) {
+                    supertest
+                        .patch('/movies/59e903b7d627851/name/something')
+                        .end(function (err, res) {
+                            expect(res.status).equal(404);
+                            expect(res.body.name).equal('CastError')
+                            expect(res.body).to.have.property('message').equal('Cast to ObjectId failed for value \"59e903b7d627851\" at path \"_id\" for model \"MovieCollection\"');
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59e903b7d627851468fedce3/replace_cast_and/new_crew', function(){
+                it('should return an error message, indicating that the id specified is not present in the database',function(done) {
+                    var new_cast_and_crew = {new_crew: ['Sean Young']}
+                    supertest
+                        .patch('/movies/59e903b7d627851468fedce3/replace_cast_and_crew/new_crew')
+                        .send(new_cast_and_crew)
+                        .end(function (err, res) {
+                            expect(res.status).equal(404);
+                            expect(res.body).to.have.property('message').equal("A Movie Object with that ID could not be found.");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59e903b7d627851/replace_cast_and_crew/something', function(){
+                it('should return an error message, indicating that the id sent is invalid',function(done) {
+                    var new_cast_and_crew = {new_crew: ["Sean Young"]}
+                    supertest
+                        .patch('/movies/59e903b7d627851/replace_cast_and_crew/new_crew')
+                        .send(new_cast_and_crew)
+                        .end(function (err, res) {
+                            expect(res.status).equal(404);
+                            expect(res.body.name).equal('CastError')
+                            expect(res.body).to.have.property('message').equal('Cast to ObjectId failed for value \"59e903b7d627851\" at path \"_id\" for model \"MovieCollection\"');
+                            done();
+                        });
+                });
+            });
+        });
+    });
     
 
 });
