@@ -1147,6 +1147,192 @@ describe('Movie Functions', function (){
             });
         });
     });
+     describe('\n\n    PUT Functions', function(){
+        describe('PUT   /movies/:id/*attribute*/:new_value   function:changeAttributeValue', function(){
+            describe('/movies/59eb66125b06692facbcd437/name/Do Androids Dream of Electric Sheep', function(){
+                it('should return a confirmation message, and update the name attribute in the database',function(done) {
+                    supertest
+                        .put('/movies/59eb66125b06692facbcd437/name/Do Androids Dream of Electric Sheep')
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message').equal("Movie attribute changed!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd437')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.name).equal('Do Androids Dream of Electric Sheep');
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/genre/Sci-fi Noir', function(){
+                it('should return a confirmation message, and update the genre attribute in the database',function(done) {
+                    supertest
+                        .put('/movies/59eb66125b06692facbcd437/genre/Sci-fi Noir')
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message').equal("Movie attribute changed!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd437')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.genre).equal('Sci-fi Noir');
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/year/2007', function(){
+                it('should return a confirmation message, and update the year attribute in the database',function(done) {
+                    supertest
+                        .put('/movies/59eb66125b06692facbcd437/year/2007')
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message').equal("Movie attribute changed!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd437')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.year).equal(2007);
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/rating/2', function(){
+                it('should return a confirmation message, and update the rating attribute in the database',function(done) {
+                    supertest
+                        .put('/movies/59eb66125b06692facbcd437/rating/2')
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message').equal("Movie attribute changed!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd437')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.rating).equal(2);
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/replace_cast_and_crew/new_crew', function(){
+                it('should return a confirmation message, and update the cast_and_crew attribute in the database',function(done) {
+                    var new_cast_and_crew = {new_crew: ["Sean Young"]}
+                    supertest
+                        .put('/movies/59eb66125b06692facbcd437/replace_cast_and_crew/new_crew')
+                        .send(new_cast_and_crew)
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message').equal("New cast and crew array has replaced old cast and crew array.");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd437')
+                        .end(function(err,res){
+                            //expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.cast_and_crew).to.be.a('array');
+                            expect(res.body.cast_and_crew.length).equal(1);
+                            expect(res.body.cast_and_crew[0]).equal("Sean Young");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/replace_cast_and_crew/new_crew   [a new array is not sent]', function(){
+                it('should return an error message, indicating that a new cast_and_crew array was not sent',function(done) {
+                    supertest
+                        .put('/movies/59eb66125b06692facbcd437/replace_cast_and_crew/new_crew')
+                        .end(function (err, res) {
+                            expect(res.status).equal(404);
+                            expect(res.body).to.have.property('message').equal("A new Cast and Crew array was not provided; add it to the request body!");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/content_rating/PG-13', function(){
+                it('should return a confirmation message, and update the content_rating attribute in the database',function(done) {
+                    supertest
+                        .put('/movies/59eb66125b06692facbcd437/content_rating/PG-13')
+                        .end(function (err, res) {
+                            expect(res.status).equal(200);
+                            expect(res.body).to.have.property('message').equal("Movie attribute changed!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    supertest
+                        .get('/movies/59eb66125b06692facbcd437')
+                        .end(function(err,res){
+                            expect(res.status).equal(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.content_rating).equal('PG-13');
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd437/content_rating/K', function(){
+                it('should return an error as K is not a valid content_rating', function(done){
+                    supertest
+                        .put('/movies/59eb66125b06692facbcd437/content_rating/K')
+                        .end(function (err, res) {
+                            //expect(res.status).equal(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body).to.have.property('errors');
+                            expect(res.body.errors.content_rating).to.have.property('message').equal("`K` is not a valid enum value for path `content_rating`.");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59e903b4683fedc7d627851e/name/new', function(){
+                it('should return a message indicating that the ID sent is not in the database', function(done){
+                    supertest
+                        .put('/movies/59e903b4683fedc7d627851e/name/new')
+                        .end(function (err, res) {
+                            expect(res.status).equal(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("That ID is not present in the database");
+                            done();
+                        });
+                });
+            });
+            describe('/movies/59eb66125b06692facbcd4/name/new',function(){
+                it('should return a message indicating that the ID sent is invalid',function(done){
+                    supertest
+                        .put('/movies/59eb66125b06692facbcd4/name/new')
+                        .end(function(err,res){
+                            expect(res.status).equal(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("That ID is invalid!");
+                            expect(res.body.error_message.message).equal("Cast to ObjectId failed for value \"59eb66125b06692facbcd4\" at path \"_id\" for model \"MovieCollection\"");
+                            done();
+                        });
+                });
+            });
+        });
+
 
     
+    });
 });
