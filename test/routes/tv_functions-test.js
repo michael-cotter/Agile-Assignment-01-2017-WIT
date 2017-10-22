@@ -34,8 +34,55 @@ describe('TV Functions', function (){
                         });
                 });
             });
-            
-
+            describe('/tv?ids=1,2,3,4',function(){
+                it('should return an error, when request parameters are attached to request path', function(done){
+                    chai.request(server)
+                        .get('/tv?ids=1,2,3,4')
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body.message).equal("Probably sent request parameters by accident!");
+                            done();
+                        });
+                });
+            });
         });
+        describe('\n      GET   /tv/:id   function:findOne', function(){
+            describe('/tv/59e903b7d6278514683fedcf',function(){
+                it('should return an id-specified TV object', function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedcf')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.name).equal("Breaking Bad");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b',function(){
+                it('should return an error message, when an invalid ID is entered', function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b')
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body.message).equal('Invalid ID!');
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683fed11',function(){
+                it('should return an error message, when an valid ID not found in the database is entered', function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fed11')
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body.message).equal('No TV Show with that ID is in the database.');
+                            done();
+                        });
+                });
+            });
+        });
+
+        
     });
 });
