@@ -390,6 +390,107 @@ describe('TV Functions', function (){
                 });
             });
         });
+describe('\n      GET   /tv/*attribute*/list/all   function:getAttributeList', function(){
+            describe('/tv/name/list/all',function(){
+                it('should return an array containing the name attributes of the objects in the database',function(done){
+                    chai.request(server)
+                        .get('/tv/name/list/all')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            expect(res.body).to.include("Mr. Robot");
+                            expect(res.body).to.include("Breaking Bad");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/creator/list/all',function(){
+                it('should return an array containing the creator attributes of the objects in the database',function(done){
+                    chai.request(server)
+                        .get('/tv/creator/list/all')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            expect(res.body).to.include("Sam Esmail");
+                            expect(res.body).to.include("Vince Gilligan");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/year/list/all',function(){
+                it('should return an array containing the year attributes of the objects in the database',function(done){
+                    chai.request(server)
+                        .get('/tv/year/list/all')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            expect(res.body).to.include(2015);
+                            expect(res.body).to.include(2009);
+                            done();
+                        });
+                });
+            });
+            describe('/tv/seasons/list/all',function(){
+                it('should return an array containing the seasons attributes of the objects in the database',function(done){
+                    chai.request(server)
+                        .get('/tv/seasons/list/all')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            expect(res.body).to.include(3);
+                            expect(res.body).to.include(5);
+                            done();
+                        });
+                });
+            });
+            describe('/tv/type/list/all',function(){
+                it('should return an array containing the type attributes of the objects in the database',function(done){
+                    chai.request(server)
+                        .get('/tv/type/list/all')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            expect(res.body).to.include("series");
+                            expect(res.body).to.include("series");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/rating/list/all',function(){
+                it('should return an array containing the rating attributes of the objects in the database',function(done){
+                    chai.request(server)
+                        .get('/tv/rating/list/all')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            expect(res.body).to.include(7);
+                            expect(res.body).to.include(9);
+                            done();
+                        });
+                });
+            });
+            describe('/tv/content_rating/list/all',function(){
+                it('should return an array containing the content_rating attributes of the objects in the database',function(done){
+                    chai.request(server)
+                        .get('/tv/content_rating/list/all')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            expect(res.body).to.include("TV-MA");
+                            expect(res.body).to.include("TV-MA");
+                            done();
+                        });
+                });
+            });
+        });
+
         
     });
 });
