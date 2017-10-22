@@ -82,7 +82,7 @@ describe('TV Functions', function (){
                 });
             });
         });
-describe('\n      GET   /tv/multiple/search   function:findMany [requires the inclusion of request parameters]', function(){
+        describe('\n      GET   /tv/multiple/search   function:findMany [requires the inclusion of request parameters]', function(){
             describe('/tv/multiple/search?ids=59e903b7d6278514683fedce%2C59e903b7d6278514683fedcf',function(){
                 it('should return an array of TV objects whose IDs match those sent as request parameters',function(done){
                     chai.request(server)
@@ -179,6 +179,212 @@ describe('\n      GET   /tv/multiple/search   function:findMany [requires the in
                             expect(res).to.have.status(404);
                             expect(res.body).to.have.property('message').equal("You forgot to include request parameters.");
                             //expect(res.body).to.have.property('message').equal('The request parameters needs to be labelled ids.');
+                            done();
+                        });
+                });
+            });
+        });
+        describe('\n      GET   /tv/fuzzy/*attribute*/:substring_input   function:substringSearch', function(){
+            describe('tv/fuzzy/name/r',function(){
+                it('should return all TV objects, the names of which contain :substring_input as a substring, regardless of case', function(done){
+                    chai.request(server)
+                        .get('/tv/fuzzy/name/r')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include({name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"});
+                            expect(result).to.include({name:"Breaking Bad",creator:"Vince Gilligan",year:2009,seasons:5,type:"series",rating:9,content_rating:"TV-MA"});
+                            done();
+                        });
+                });
+            });
+            describe('/tv/fuzzy/name/Breaking Bad',function(){
+                it('should return a TV object, the name of which is the exactly the same as :substring_input, regardless of case', function(done) {
+                    chai.request(server)
+                        .get('/tv/fuzzy/name/Breaking Bad')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            //expect(result).to.include({name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"});
+                            expect(result).to.include({name:"Breaking Bad",creator:"Vince Gilligan",year:2009,seasons:5,type:"series",rating:9,content_rating:"TV-MA"});
+                            done();
+                        });
+                });
+            });
+            describe('/tv/fuzzy/name/Breaking%20Bad',function(){
+                it('should return a TV object, the name of which is the exactly the same as :substring_input, and handle \'%20\'', function(done) {
+                    chai.request(server)
+                        .get('/tv/fuzzy/name/Breaking%20Bad')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            //expect(result).to.include({name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"});
+                            expect(result).to.include({name:"Breaking Bad",creator:"Vince Gilligan",year:2009,seasons:5,type:"series",rating:9,content_rating:"TV-MA"});
+                            done();
+                        });
+                });
+            });
+            describe('/tv/fuzzy/name/something_else',function(){
+                it('should return an error message when :substring_input is not a substring of the names of any TV object', function(done){
+                    chai.request(server)
+                        .get('/tv/fuzzy/name/something_else')
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("The substring search failed to return any TV objects");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/fuzzy/creator/ill',function(){
+                it('should return all TV objects, the creators of which contain :substring_input as a substring, regardless of case', function(done){
+                    chai.request(server)
+                        .get('/tv/fuzzy/creator/ill')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include({name:"Breaking Bad",creator:"Vince Gilligan",year:2009,seasons:5,type:"series",rating:9,content_rating:"TV-MA"});
+                            done();
+                        });
+                });
+            });
+            describe('/tv/fuzzy/creator/Vince giLLigan',function(){
+                it('should return TV object(s), the creator(s) of which is/are the exactly the same as :substring_input, regardless of case', function(done) {
+                    chai.request(server)
+                        .get('/tv/fuzzy/creator/Vince giLLigan')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            //expect(result).to.include({name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"});
+                            expect(result).to.include({name:"Breaking Bad",creator:"Vince Gilligan",year:2009,seasons:5,type:"series",rating:9,content_rating:"TV-MA"});
+                            done();
+                        });
+                });
+            });
+            describe('/tv/fuzzy/creator/wrong man',function(){
+                it('should return an error message when :substring_input is not a substring of the creators of any TV object', function(done){
+                    chai.request(server)
+                        .get('/tv/fuzzy/creator/wrong man')
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("The substring search failed to return any TV objects");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/fuzzy/type/s',function(){
+                it('should return all TV objects, the types of which contain :substring_input as a substring, regardless of case', function(done){
+                    chai.request(server)
+                        .get('/tv/fuzzy/type/s')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include({name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"});
+                            expect(result).to.include({name:"Breaking Bad",creator:"Vince Gilligan",year:2009,seasons:5,type:"series",rating:9,content_rating:"TV-MA"});
+                            done();
+                        });
+                });
+            });
+            describe('/tv/fuzzy/type/series',function(){
+                it('should return a TV object, the creator of which is the exactly the same as :substring_input, regardless of case', function(done) {
+                    chai.request(server)
+                        .get('/tv/fuzzy/type/series')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include({name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"});
+                            expect(result).to.include({name:"Breaking Bad",creator:"Vince Gilligan",year:2009,seasons:5,type:"series",rating:9,content_rating:"TV-MA"});
+                            done();
+                        });
+                });
+            });
+            describe('/tv/fuzzy/type/mini-series',function(){
+                it('should return an error message when :substring_input is not a substring of the creators of any TV object', function(done){
+                    chai.request(server)
+                        .get('/tv/fuzzy/type/mini-series')
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("The substring search failed to return any TV objects");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/fuzzy/content_rating/V',function(){
+                it('should return all TV objects, the content_ratings of which contain :substring_input as a substring, regardless of case', function(done){
+                    chai.request(server)
+                        .get('/tv/fuzzy/content_rating/V')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include({name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"});
+                            expect(result).to.include({name:"Breaking Bad",creator:"Vince Gilligan",year:2009,seasons:5,type:"series",rating:9,content_rating:"TV-MA"});
+                            done();
+                        });
+                });
+            });
+            describe('/tv/fuzzy/content_rating/TV-MA',function(){
+                it('should return TV object(s), the content_rating(s) of which is/are exactly the same as :substring_input, regardless of case', function(done) {
+                    chai.request(server)
+                        .get('/tv/fuzzy/content_rating/TV-MA')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include({name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"});
+                            expect(result).to.include({name:"Breaking Bad",creator:"Vince Gilligan",year:2009,seasons:5,type:"series",rating:9,content_rating:"TV-MA"});
+                            done();
+                        });
+                });
+            });
+            describe('/tv/fuzzy/content_rating/TV-Y',function(){
+                it('should return an error message when :substring_input is not a substring of the content_rating of any TV object', function(done){
+                    chai.request(server)
+                        .get('/tv/fuzzy/content_rating/TV-Y')
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("The substring search failed to return any TV objects");
                             done();
                         });
                 });
