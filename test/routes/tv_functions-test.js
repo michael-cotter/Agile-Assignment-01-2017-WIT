@@ -642,7 +642,116 @@ describe('\n      GET   /tv/*attribute*/list/all   function:getAttributeList', f
                 });
             });
         });
-
-        
+        describe('\n      GET   /tv/:id/*attribute*   function:getSpecificAttribute',function(){
+            describe('/tv/59e903b7d6278514683fedcf/name',function(){
+                it('should return an id-specified name attribute string',function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedcf/name')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('String');
+                            expect(res.body).equal("Breaking Bad");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683fedcf/creator',function(){
+                it('should return an id-specified creator attribute string',function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedcf/creator')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('String');
+                            expect(res.body).equal("Vince Gilligan");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683fedcf/year',function(){
+                it('should return an id-specified year attribute number',function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedcf/year')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('Number');
+                            expect(res.body).equal(2009);
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683fedcf/seasons',function(){
+                it('should return an id-specified seasons attribute number',function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedcf/seasons')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('Number');
+                            expect(res.body).equal(5);
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683fedcf/type',function(){
+                it('should return an id-specified type attribute string',function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedcf/type')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('String');
+                            expect(res.body).equal("series");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683fedcf/rating',function(){
+                it('should return an id-specified rating attribute number',function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedcf/rating')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('Number');
+                            expect(res.body).equal(9);
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683fedcf/content_rating',function(){
+                it('should return an id-specified content_rating attribute string',function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedcf/content_rating')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('String');
+                            expect(res.body).equal("TV-MA");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683fed/content_rating',function(){
+                it('should return an error message when invalid ID is entered',function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fed/content_rating')
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body).to.have.property('message')
+                            expect(res.body.message).equal('Invalid ID');
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683fedc0/name',function(){
+                it('should return an error message indicating that the ID sent is not present in the database',function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedc0/name')
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body).to.have.property('message')
+                            expect(res.body.message).equal('This ID is not present in the database.');
+                            done();
+                        });
+                });
+            });
+        });        
     });
+    
 });
