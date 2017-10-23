@@ -490,6 +490,158 @@ describe('\n      GET   /tv/*attribute*/list/all   function:getAttributeList', f
                 });
             });
         });
+        describe('\n      GET   /tv/*attribute*/:attribute_value   function:getByAttribute',function(){
+            describe('/tv/name/Mr. Robot',function(){
+                it('should return an array of TV Object(s), the name[s] of which correspond(s) to the :attribute_value',function(done){
+                    chai.request(server)
+                        .get('/tv/name/Mr. Robot')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include({name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"})
+                            done();
+                        });
+                });
+            });
+            describe('/tv/creator/Sam Esmail',function(){
+                it('should return an array of TV Object(s), the creator[s] of which correspond(s) to the :attribute_value',function(done){
+                    chai.request(server)
+                        .get('/tv/creator/Sam Esmail')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include({name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"})
+                            done();
+                        });
+                });
+            });
+            describe('/tv/year/2015',function(){
+                it('should return an array of TV Object(s), the years[s] of which correspond(s) to the :attribute_value',function(done){
+                    chai.request(server)
+                        .get('/tv/year/2015')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include({name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"})
+                            done();
+                        });
+                });
+            });
+            describe('/tv/seasons/3',function(){
+                it('should return an array of TV Object(s), the seasons[s] of which correspond(s) to the :attribute_value',function(done){
+                    chai.request(server)
+                        .get('/tv/seasons/3')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include({name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"})
+                            done();
+                        });
+                });
+            });
+            describe('/tv/type/series',function(){
+                it('should return an array of TV Object(s), the type(s) of which correspond[s] to the :attribute_value',function(done){
+                    chai.request(server)
+                        .get('/tv/type/series')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include({name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"})
+                            expect(result).to.include( {name:"Breaking Bad",creator:"Vince Gilligan",year:2009,seasons:5,type:"series",rating:9,content_rating:"TV-MA"} );
+                            done();
+                        });
+                });
+            });
+            describe('/tv/rating/9',function(){
+                it('should return an array of TV Object(s), the rating(s) of which correspond[s] to the :attribute_value',function(done){
+                    chai.request(server)
+                        .get('/tv/rating/9')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include( {name:"Breaking Bad",creator:"Vince Gilligan",year:2009,seasons:5,type:"series",rating:9,content_rating:"TV-MA"} );
+                            done();
+                        });
+                });
+            });
+            describe('/tv/content_rating/TV-MA',function(){
+                it('should return an array of TV Object(s), the type(s) of which correspond[s] to the :attribute_value',function(done){
+                    chai.request(server)
+                        .get('/tv/content_rating/TV-MA')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(2);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include({name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"})
+                            expect(result).to.include( {name:"Breaking Bad",creator:"Vince Gilligan",year:2009,seasons:5,type:"series",rating:9,content_rating:"TV-MA"} );
+                            done();
+                        });
+                });
+            });
+            describe('/tv/content_rating/M',function(){
+                it('should return an error message when an invalid search attribute_value was entered',function(done){
+                    chai.request(server)
+                        .get('/tv/content_rating/M')
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.message).equal("There are no TV Shows with that attribute in the database.");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/content_rating/Mr. Robot?ids=1,2,3,4',function(){
+                it('should return an error message when request parameters are added to the path',function(done){
+                    chai.request(server)
+                        .get('/tv/content_rating/Mr. Robot?ids=1,2,3,4')
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.message).equal("Request parameters were included, invalidating the search");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/content_rating/Fake Name',function(){
+                it('should return an error message when the attribute value being searched for is not in the database.',function(done){
+                    chai.request(server)
+                        .get('/tv/content_rating/Fake Name')
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.message).equal("There are no TV Shows with that attribute in the database.");
+                            done();
+                        });
+                });
+            });
+        });
 
         
     });
