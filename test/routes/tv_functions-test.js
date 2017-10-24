@@ -807,8 +807,100 @@ describe('\n      GET   /tv/*attribute*/list/all   function:getAttributeList', f
                 });
             });
         });
-
-
-
+        describe('\n      POST   /tv/:array_name   function:addMany',function(){
+            describe('/tv/tv_array   [requires the inclusion of an array named tv_array in the request body]',function(){
+                it('should add the contents of the :array_name array to the database, when it contains valid documents, and return a confirmation message',function(done){
+                    var send_object = {
+                        tv_array:
+                            [
+                                {name:"Mad Men",_id:"59eb77d48bef0021640102f5",creator:"Matthew Weiner",year:2007,seasons:7,type:"series",rating:10,content_rating:"TV-MA"},
+                                {name:"The Sopranos",_id:"59eb77d48bef0021640102f6",creator:"David Chase",year:1999,seasons:6,type:"series",rating:8,content_rating:"TV-MA"},
+                                {name:"True Detective",_id:"59eb77d48bef0021640102f7",creator:"Nic Pizzolatto",year:2014,seasons:2,type:"series",rating:10,content_rating:"TV-MA"},
+                                {name:"The Shadow Line",_id:"59eb77d48bef0021640102f8",creator:"Hugo Blick",year:2015,seasons:1,type:"mini-series",rating:10,content_rating:"TV-MA"},
+                                {name:"The Wire",_id:"59eb77d48bef0021640102f9",creator:"David Simon",year:2002,seasons:5,type:"series",rating:9,content_rating:"TV-MA"},
+                                {name:"Show Me a Hero",_id:"59eb77d48bef0021640102fa",creator:"David Simon",year:2015,seasons:1,type:"mini-series",rating:8,content_rating:"TV-MA"}
+                            ]
+                    }
+                    chai.request(server)
+                        .post('/tv/tv_array')
+                        .send(send_object)
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("TV Show(s) added to the database.");
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv')
+                        .end(function(err, res) {
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(8);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, _id:tv._id, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include({name:"Mad Men",_id:"59eb77d48bef0021640102f5",creator:"Matthew Weiner",year:2007,seasons:7,type:"series",rating:10,content_rating:"TV-MA"});
+                            expect(result).to.include({name:"The Sopranos",_id:"59eb77d48bef0021640102f6",creator:"David Chase",year:1999,seasons:6,type:"series",rating:8,content_rating:"TV-MA"});
+                            expect(result).to.include({name:"True Detective",_id:"59eb77d48bef0021640102f7",creator:"Nic Pizzolatto",year:2014,seasons:2,type:"series",rating:10,content_rating:"TV-MA"});
+                            expect(result).to.include({name:"The Shadow Line",_id:"59eb77d48bef0021640102f8",creator:"Hugo Blick",year:2015,seasons:1,type:"mini-series",rating:10,content_rating:"TV-MA"});
+                            expect(result).to.include({name:"The Wire",_id:"59eb77d48bef0021640102f9",creator:"David Simon",year:2002,seasons:5,type:"series",rating:9,content_rating:"TV-MA"});
+                            expect(result).to.include({name:"Show Me a Hero",_id:"59eb77d48bef0021640102fa",creator:"David Simon",year:2015,seasons:1,type:"mini-series",rating:8,content_rating:"TV-MA"});
+                            done();
+                        });
+                });
+            });
+            describe('/tv/tv_array   [requires the inclusion of an array named tv_array in the request body]',function(){
+                it('should return an error when at least one of the documents in the :array_name array are invalid',function(done){
+                    var send_object = {
+                        tv_array:
+                            [
+                                {x:"Mad Men",creator:"Matthew Weiner",year:2007,seasons:7,type:"series",rating:10,content_rating:"TV-MA"},
+                                {name:"The Sopranos",creator:"David Chase",year:1999,seasons:6,type:"series",rating:8,content_rating:"TV-MA"},
+                                {name:"True Detective",creator:"Nic Pizzolatto",year:2014,seasons:2,type:"series",rating:10,content_rating:"TV-MA"},
+                                {name:"The Shadow Line",creator:"Hugo Blick",year:2015,seasons:1,type:"mini-series",rating:10,content_rating:"TV-MA"},
+                                {name:"The Wire",creator:"David Simon",year:2002,seasons:5,type:"series",rating:9,content_rating:"TV-MA"},
+                                {name:"Show Me a Hero",creator:"David Simon",year:2015,seasons:1,type:"mini-series",rating:8,content_rating:"TV-MA"}
+                            ]
+                    }
+                    chai.request(server)
+                        .post('/tv/tv_array')
+                        .send(send_object)
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body).to.have.property('errors').to.have.property('name').to.have.property('message');
+                            expect(res.body.errors.name.message).equal("Path `name` is required.");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/wrong_name',function(){
+                it('should return an error when :array_name is not the name of the array that is sent',function(done){
+                    var send_object = {
+                        tv_array:
+                            [
+                                {name:"Mad Men",creator:"Matthew Weiner",year:2007,seasons:7,type:"series",rating:10,content_rating:"TV-MA"},
+                                {name:"The Sopranos",creator:"David Chase",year:1999,seasons:6,type:"series",rating:8,content_rating:"TV-MA"},
+                                {name:"True Detective",creator:"Nic Pizzolatto",year:2014,seasons:2,type:"series",rating:10,content_rating:"TV-MA"},
+                                {name:"The Shadow Line",creator:"Hugo Blick",year:2015,seasons:1,type:"mini-series",rating:10,content_rating:"TV-MA"},
+                                {name:"The Wire",creator:"David Simon",year:2002,seasons:5,type:"series",rating:9,content_rating:"TV-MA"},
+                                {name:"Show Me a Hero",creator:"David Simon",year:2015,seasons:1,type:"mini-series",rating:8,content_rating:"TV-MA"}
+                            ]
+                    }
+                    chai.request(server)
+                        .post('/tv/wrong_name')
+                        .send(send_object)
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("The name of the array in the request path does not match the name of the array that was sent.");
+                            done();
+                        });
+                });
+            });
+        });
     });
+    
+    
 });
