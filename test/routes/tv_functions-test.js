@@ -753,5 +753,62 @@ describe('\n      GET   /tv/*attribute*/list/all   function:getAttributeList', f
             });
         });        
     });
-    
+    describe('\n\n    POST Functions', function(){
+        describe('POST   /tv   function:addOne', function(){
+            describe('/tv   [requires the inclusion of a valid document to the request body]',function(){
+                it('should add valid document into database and return confirmation message', function(done){
+                    var new_tv = {name:"True Detective",_id:"59eb77d48bef0021640102f5",creator:"Nic Pizzolatto",year:2014,seasons:2,type:"series",rating:10,content_rating:"TV-MA"}
+                    chai.request(server)
+                        .post('/tv')
+                        .send(new_tv)
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message').equal('TV Show Added to Database!');
+                            done();
+                        });
+                });
+                after(function (done) {
+                    chai.request(server)
+                        .get('/tv/59eb77d48bef0021640102f5')
+                        .end(function(err, res) {
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.name).equal("True Detective");
+                            expect(res.body).to.include({name:"True Detective",_id:"59eb77d48bef0021640102f5",creator:"Nic Pizzolatto",year:2014,seasons:2,type:"series",rating:10,content_rating:"TV-MA"});
+                            done();
+                        });
+                });
+            });
+            describe('/tv?ids=1,2,3,4',function(){
+                it('should return an error message when request parameters are attached to the path', function(done){
+                    var new_tv = {name:"True Detective",_id:"59eb77d48bef0021640102f5",creator:"Nic Pizzolatto",year:2014,seasons:2,type:"series",rating:10,content_rating:"TV-MA"}
+                    chai.request(server)
+                        .post('/tv?ids=1,2,3,4')
+                        .send(new_tv)
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body).to.have.property('message').equal('There\'s a problem with the request path');
+                            done();
+                        });
+                });
+            });
+            describe('/tv   [requires the inclusion of an invalid document to the request body]',function(){
+                it('should return an error when an invalid document is sent',function(done){
+                    var new_tv = {x:"True Detective",x:"59eb77d48bef0021640102f5",x:"Nic Pizzolatto",x:2014,x:2,x:"series",x:10,x:"TV-MA"}
+                    chai.request(server)
+                        .post('/tv')
+                        .send(new_tv)
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body).to.have.property('errors').to.have.property('name').to.have.property('message');
+                            expect(res.body.errors.name.message).equal("Path `name` is required.");
+                            done();
+                        });
+                });
+            });
+        });
+
+
+
+    });
 });
