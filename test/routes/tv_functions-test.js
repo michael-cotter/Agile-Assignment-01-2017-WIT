@@ -901,6 +901,211 @@ describe('\n      GET   /tv/*attribute*/list/all   function:getAttributeList', f
             });
         });
     });
+    describe('\n\n    DELETE Functions', function(){
+        describe('DELETE   /tv   function:deleteMany',function(){
+            describe('/tv',function(){
+                it('should delete all TV objects from the database, and return a confirmation message', function(done){
+                    chai.request(server)
+                        .delete('/tv')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("All TV objects have been deleted from the database");
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(0);
+                            done();
+                        });
+                });
+            });
+        });
+        describe('\n      DELETE    /tv/*attribute*/:attribute_value   function:deleteMany',function(){
+            describe('/tv/name/Breaking Bad',function(){
+                it('should return a message confirming there are no TV objects in the database with the specified name value', function(done) {
+                    chai.request(server)
+                        .delete('/tv/name/Breaking Bad')
+                        .end(function (err, res) {
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal('There are now no TV Objects in the database that have Breaking Bad for its name.');
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include( {name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"} );
+                            done();
+                        });
+                });
+            });
+            describe('/tv/creator/Vince Gilligan',function(){
+                it('should return a message confirming there are no TV objects in the database with the specified creator value', function(done){
+                    chai.request(server)
+                        .delete('/tv/creator/Vince Gilligan')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal('There are now no TV Objects in the database that have Vince Gilligan for its creator.');
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include( {name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"} );
+                            done();
+                        });
+                });
+            });
+            describe('/tv/year/2009',function(){
+                it('should return a message confirming there are no TV objects in the database with the specified year value', function(done){
+                    chai.request(server)
+                        .delete('/tv/year/2009')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal('There are now no TV Objects in the database that have 2009 for its year.');
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include( {name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"} );
+                            done();
+                        });
+
+                });
+            });
+            describe('/tv/seasons/5',function(){
+                it('should return a message confirming there are no TV objects in the database with the specified seasons value', function(done){
+                    chai.request(server)
+                        .delete('/tv/seasons/5')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal('There are now no TV Objects in the database that have 5 for its seasons.');
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include( {name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"} );
+                            done();
+                        });
+
+                });
+            });
+            describe('/tv/type/series',function(){
+                it('should return a message confirming there are no TV objects in the database with the specified type value', function(done){
+                    chai.request(server)
+                        .delete('/tv/type/series')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal('There are now no TV Objects in the database that have series for its type.');
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(0);
+                            done();
+                        });
+
+                });
+            });
+            describe('/tv/rating/9',function(){
+                it('should return a message confirming there are no TV objects in the database with the specified rating value', function(done){
+                    chai.request(server)
+                        .delete('/tv/rating/9')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal('There are now no TV Objects in the database that have 9 for its rating.');
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include( {name:"Mr. Robot",creator:"Sam Esmail",year:2015,seasons:3,type:"series",rating:7,content_rating:"TV-MA"} );
+                            done();
+                        });
+                });
+            });
+            describe('/tv/content_rating/TV-MA',function(){
+                it('should return a message confirming there are no TV objects in the database with the specified content_rating value', function(done){
+                    chai.request(server)
+                        .delete('/tv/content_rating/TV-MA')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal('There are now no TV Objects in the database that have TV-MA for its content_rating.');
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(0);
+                            done();
+                        });
+                });
+            });
+        });
+
     
-    
+    });
 });
