@@ -1460,6 +1460,157 @@ describe('\n      GET   /tv/*attribute*/list/all   function:getAttributeList', f
             });
         });        
     });
-    
-    
+    describe('\n\n    PATCH Functions', function(){
+        describe('PATCH   /tv/:id/*attribute*/:new_value   function:changeAttributeValue_patch', function(){
+            describe('/tv/59e903b7d6278514683fedce/name/robot man', function(){
+                it('should return a confirmation message, and update the name attribute in the database',function(done) {
+                    chai.request(server)
+                        .patch('/tv/59e903b7d6278514683fedce/name/robot man')
+                        .end(function (err, res) {
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message').equal("The TV Object was successfully patched!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedce')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.name).equal('robot man');
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683fedce/creator/Bam Smesmail', function(){
+                it('should return a confirmation message, and update the creator attribute in the database',function(done) {
+                    chai.request(server)
+                        .patch('/tv/59e903b7d6278514683fedce/creator/Bam Smesmail')
+                        .end(function (err, res) {
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message').equal("The TV Object was successfully patched!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedce')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.creator).equal('Bam Smesmail');
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683fedce/year/2008', function(){
+                it('should return a confirmation message, and update the year attribute in the database',function(done) {
+                    chai.request(server)
+                        .patch('/tv/59e903b7d6278514683fedce/year/2008')
+                        .end(function (err, res) {
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message').equal("The TV Object was successfully patched!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedce')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.year).equal(2008);
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683fedce/rating/2', function(){
+                it('should return a confirmation message, and update the rating attribute in the database',function(done) {
+                    chai.request(server)
+                        .patch('/tv/59e903b7d6278514683fedce/rating/2')
+                        .end(function (err, res) {
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message').equal("The TV Object was successfully patched!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedce')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.rating).equal(2);
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683fedce/seasons/8', function(){
+                it('should return a confirmation message, and update the seasons attribute in the database',function(done) {
+                    chai.request(server)
+                        .patch('/tv/59e903b7d6278514683fedce/seasons/8')
+                        .end(function (err, res) {
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message').equal("The TV Object was successfully patched!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedce')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.seasons).equal(8);
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683fedce/content_rating/TV-Y', function(){
+                it('should return a confirmation message, and update the content_rating attribute in the database',function(done) {
+                    chai.request(server)
+                        .patch('/tv/59e903b7d6278514683fedce/content_rating/TV-Y')
+                        .end(function (err, res) {
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message').equal("The TV Object was successfully patched!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedce')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.content_rating).equal('TV-Y');
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d627851468fedce3/name/whatever', function(){
+                it('should return an error message, indicating that the id specified is not present in the database',function(done) {
+                    chai.request(server)
+                        .patch('/tv/59e903b7d627851468fedce3/name/whatever')
+                        .end(function (err, res) {
+                            //expect(res).to.have.status(404);
+                            expect(res.body).to.have.property('message').equal("A TV Object with that ID could not be found.");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d627851/name/something', function(){
+                it('should return an error message, indicating that the id sent is invalid',function(done) {
+                    chai.request(server)
+                        .patch('/tv/59e903b7d627851/name/something')
+                        .end(function (err, res) {
+                            expect(res).to.have.status(404);
+                            expect(res.body.name).equal('CastError')
+                            expect(res.body).to.have.property('message').equal('Cast to ObjectId failed for value \"59e903b7d627851\" at path \"_id\" for model \"TVCollection\"');
+                            done();
+                        });
+                });
+            });
+        });
+    });    
 });

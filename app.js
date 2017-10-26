@@ -21,8 +21,8 @@ var app = express();
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 
 //if(process.env.NODE_ENV == 'test'){
-    //console.log("process.env.NODE_ENV: "+process.env.NODE_ENV);
-    //app.use(logger('dev'));
+//console.log("process.env.NODE_ENV: "+process.env.NODE_ENV);
+//app.use(logger('dev'));
 //}
 
 app.use(bodyParser.json());
