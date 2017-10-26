@@ -1105,7 +1105,57 @@ describe('\n      GET   /tv/*attribute*/list/all   function:getAttributeList', f
                 });
             });
         });
-
-    
+        describe('\n      DELETE    /tv/:id   function:deleteOne', function(){
+            describe('/tv/59e903b7d6278514683fedce',function(){
+                it('should delete an id-specified TV Object from the database, and return a confirmation message', function(done){
+                    chai.request(server)
+                        .delete('/tv/59e903b7d6278514683fedce')
+                        .end(function(err, res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message').equal('TV Show Deleted from Database!')
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('array');
+                            expect(res.body.length).equal(1);
+                            var result = _.map(res.body, function (tv) {
+                                return { name: tv.name, creator: tv.creator, year: tv.year, seasons: tv.seasons, type: tv.type, rating: tv.rating, content_rating:tv.content_rating }
+                            });
+                            expect(result).to.include( {name:"Breaking Bad",creator:"Vince Gilligan",year:2009,seasons:5,type:"series",rating:9,content_rating:"TV-MA"} );
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6e',function(){
+                it('should return an error message when an invalid ID is sent', function(done){
+                    chai.request(server)
+                        .delete('/tv/59e903b7d6e')
+                        .end(function(err, res){
+                            expect(res).to.have.status(404);
+                            expect(res.body).to.have.property('message').equal('Invalid ID!');
+                            expect(res.body).to.have.property('errmsg');
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683faaaa',function(){
+                it('should return an error message when a valid ID is sent that is not present in the database', function(done){
+                    chai.request(server)
+                        .delete('/tv/59e903b7d6278514683faaaa')
+                        .end(function(err, res){
+                            expect(res).to.have.status(404);
+                            expect(res.body).to.have.property('message').equal("That ID is not present in the database.");
+                            done();
+                        });
+                });
+            });
+        });    
     });
+    
+    
 });
