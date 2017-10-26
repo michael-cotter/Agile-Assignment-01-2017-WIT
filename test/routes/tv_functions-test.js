@@ -1325,7 +1325,141 @@ describe('\n      GET   /tv/*attribute*/list/all   function:getAttributeList', f
                 });
             });
         });
-        
-        
-    });    
+        describe('\n      PUT   /tv/:id/*instruction*   function:incOrDecRating',function(){
+            describe('/tv/59e903b7d6278514683fedce/incrementRating   [when rating is not equal to 10]', function(){
+                it('should return a confirmation message, and increment the rating attribute value in the database.', function(done){
+                    chai.request(server)
+                        .put('/tv/59e903b7d6278514683fedce/incrementRating')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("TV Show rating incremented!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedce')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.rating).equal(8);
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b4683fedc7d627851e/incrementRating   [when rating IS equal to 10]', function(){
+                beforeEach(function(done){
+                    chai.request(server)
+                        .put('/tv/59e903b7d6278514683fedce/rating/10')
+                        .end(function (err, res) {
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message').equal("TV Show attribute changed!");
+                            done();
+                        });
+                });
+                it('should return a message indicating that the rating value is already the highest possible, and not update the database.', function(done){
+                    chai.request(server)
+                        .put('/tv/59e903b7d6278514683fedce/incrementRating')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("TV Show already has highest possible rating!");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b4683fedc7d627851e/decrementRating   [when rating is not equal to 0]', function(){
+                it('should return a confirmation message, and decrement the rating attribute value in the database.', function(done){
+                    chai.request(server)
+                        .put('/tv/59e903b7d6278514683fedce/decrementRating')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("TV Show rating decremented!");
+                            done();
+                        });
+                });
+                after(function(done){
+                    chai.request(server)
+                        .get('/tv/59e903b7d6278514683fedce')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.be.a('object');
+                            expect(res.body.rating).equal(6);
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d6278514683fedce/decrementRating   [when rating IS equal to 0]', function(){
+                beforeEach(function(done){
+                    chai.request(server)
+                        .put('/tv/59e903b7d6278514683fedce/rating/0')
+                        .end(function (err, res) {
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message').equal("TV Show attribute changed!");
+                            done();
+                        });
+                });
+                it('should return a message indicating that the rating value is already the lowest possible, and not update the database.', function(done){
+                    chai.request(server)
+                        .put('/tv/59e903b7d6278514683fedce/decrementRating')
+                        .end(function(err,res){
+                            expect(res).to.have.status(200);
+                            expect(res.body).to.have.property('message');
+                            expect(res.body.message).equal("TV Show already has lowest possible rating!");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d627851468fedce3/incrementRating   [regardless of rating\'s value]',function(){
+                it('should return a message, indicating that the id specified is not present in the database',function(done) {
+                    chai.request(server)
+                        .put('/tv/59e903b7d627851468fedce3/incrementRating')
+                        .end(function (err, res) {
+                            //expect(res).to.have.status(404);
+                            expect(res.body).to.have.property('message').equal("There is no TV Show object with this ID in the database.");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d627851468fedce3/decrementRating   [regardless of rating\'s value]',function(){
+                it('should return a message, indicating that the id specified is not present in the database',function(done) {
+                    chai.request(server)
+                        .put('/tv/59e903b7d627851468fedce3/decrementRating')
+                        .end(function (err, res) {
+                            //expect(res).to.have.status(404);
+                            expect(res.body).to.have.property('message').equal("There is no TV Show object with this ID in the database.");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d627851/incrementRating   [regardless of rating\'s value]', function(){
+                it('should return a message indicating that the id sent is not valid.', function(done){
+                    chai.request(server)
+                        .put('/tv/59e903b7d627851/incrementRating')
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body.name).equal('CastError');
+                            expect(res.body.message).equal("Cast to ObjectId failed for value \"59e903b7d627851\" at path \"_id\" for model \"TVCollection\"");
+                            done();
+                        });
+                });
+            });
+            describe('/tv/59e903b7d627851/decrementRating   [regardless of rating\'s value]', function(){
+                it('should return a message indicating that the id sent is not valid.', function(done){
+                    chai.request(server)
+                        .put('/tv/59e903b7d627851/decrementRating')
+                        .end(function(err,res){
+                            expect(res).to.have.status(404);
+                            expect(res.body.name).equal('CastError');
+                            expect(res.body.message).equal("Cast to ObjectId failed for value \"59e903b7d627851\" at path \"_id\" for model \"TVCollection\"");
+                            done();
+                        });
+                });
+            });
+        });        
+    });
+    
+    
 });
