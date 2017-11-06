@@ -185,7 +185,7 @@ describe('TV Functions', function (){
             });
         });
         describe('\n      GET   /tv/fuzzy/*attribute*/:substring_input   function:substringSearch', function(){
-            describe('tv/fuzzy/name/r',function(){
+            describe('/tv/fuzzy/name/r',function(){
                 it('should return all TV objects, the names of which contain :substring_input as a substring, regardless of case', function(done){
                     chai.request(server)
                         .get('/tv/fuzzy/name/r')

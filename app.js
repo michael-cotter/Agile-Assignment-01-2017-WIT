@@ -111,7 +111,7 @@ app.patch('/tv/:id/content_rating/:new_value', tv_functions.tv_changeAttributeVa
 
 app.get('/movies', movie_functions.movies_findAll); //tested
 app.get('/movies/:id', movie_functions.movies_findOne); //tested
-app.post('/movies/', movie_functions.movies_addOne); //tested
+app.post('/movies', movie_functions.movies_addOne); //tested
 app.delete('/movies/:id', movie_functions.movies_deleteOne); //tested
 
 app.get('/movies/multiple/search', movie_functions.movies_findMany);//include comma-separated ids as request parameters //tested

@@ -645,7 +645,7 @@ describe('Movie Functions', function (){
                         });
                 });
             });
-            describe('movies/cast_and_crew/Harrison Ford?ids=1,2,3,4',function(){
+            describe('/movies/cast_and_crew/Harrison Ford?ids=1,2,3,4',function(){
                 it('should return an error message, indicating that request parameters were erroneously included',function(done){
                     supertest
                         .get('/movies/cast_and_crew/Harrison Ford?ids=1,2,3,4')
